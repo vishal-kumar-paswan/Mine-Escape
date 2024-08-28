@@ -54,7 +54,7 @@ class DisplayMessage {
             actionsAlignment: MainAxisAlignment.center,
             alignment: Alignment.center,
             title: Transform.scale(
-              scale: 1.6,
+              scale: 1.3,
               child: Lottie.asset(
                 animation,
                 animate: true,

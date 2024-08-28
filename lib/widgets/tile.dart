@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Tile extends StatelessWidget {
-  const Tile({
-    super.key,
-    this.color,
-    this.icon,
-  });
+  const Tile({super.key, this.color, this.icon, this.blurIcon});
   final Color? color;
   final String? icon;
+  final bool? blurIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +17,26 @@ class Tile extends StatelessWidget {
       ),
       child: icon == null
           ? const SizedBox()
-          : Center(
-              child: Image.asset(
-                icon!,
-                height: 70,
-                width: 70,
-              ),
-            ),
+          : (blurIcon != null ? !blurIcon! : false)
+              ? Image.asset(
+                  icon!,
+                  height: 70,
+                  width: 70,
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      color!,
+                      BlendMode.saturation,
+                    ),
+                    child: Image.asset(
+                      icon!,
+                      height: 70,
+                      width: 70,
+                    ),
+                  ),
+                ),
     );
   }
 }
