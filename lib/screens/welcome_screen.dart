@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mines/constants.dart';
 import 'package:mines/routes/route_constants.dart';
@@ -52,14 +53,14 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset(
               Constants.appIcon,
-              width: 250,
+              width: 255,
             ),
-            const SizedBox(height: 15),
+            const Gap(7),
             const Text(
-              'Loading...',
+              'loading...',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 12,
+                fontSize: 13.5,
               ),
             ),
           ],
