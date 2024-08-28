@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       builder: FToastBuilder(),
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xff0F212E),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 7, 16, 22),
         textTheme: const TextTheme(
           titleLarge: TextStyle(
             color: Colors.white,

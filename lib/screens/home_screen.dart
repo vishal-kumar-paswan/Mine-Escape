@@ -9,6 +9,7 @@ import 'package:mines/blocs/view_tile_bloc/view_tile_bloc.dart';
 import 'package:mines/blocs/view_tile_bloc/view_tile_event.dart';
 import 'package:mines/constants.dart';
 import 'package:mines/utils/display_message.dart';
+import 'package:mines/utils/sound_effects.dart';
 import 'package:mines/widgets/tile.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late int _clickedMineIndex;
   bool _isGameStarted = false;
   bool _isTileClickable = false;
+  bool _isResetButtonClickable = true;
 
   @override
   void initState() {
@@ -50,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    print(_tiles);
+    // print(_tiles);
 
     _isTileClickable = true;
 
@@ -101,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
           () {
             DisplayMessage.dialogBox(
               context,
-              Constants.mineAnimation,
+              Constants.mine2Animation,
               'You lost!',
               () => resetGame(context),
             );
@@ -115,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _tiles = List<int>.filled(25, 0);
     _totalMines = 1;
     _isTileClickable = false;
+    _isResetButtonClickable = true;
     setState(() {
       _isGameStarted = false;
     });
@@ -128,84 +131,95 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Widget controls() {
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: const Color(0xff213743),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 28,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Total mines',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(fontWeight: FontWeight.w800),
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            Constants.appIcon,
+            width: 150,
+          ),
+          const Gap(18),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(255, 29, 43, 51),
             ),
-            const Gap(4),
-            Text(
-              '${_totalMines.ceil()}',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineLarge!
-                  .copyWith(fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+              vertical: 28,
             ),
-            const Gap(1),
-            Transform.scale(
-              scale: 1.3,
-              child: AbsorbPointer(
-                absorbing: _isGameStarted,
-                child: Slider(
-                  thumbColor: !_isGameStarted
-                      ? const Color(0xff1FFF20)
-                      : Colors.red.shade600,
-                  min: 1,
-                  max: 24,
-                  value: _totalMines.ceilToDouble(),
-                  onChanged: (minesCount) {
-                    setState(() {
-                      _totalMines = minesCount.ceilToDouble();
-                    });
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Total mines',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(fontWeight: FontWeight.w800),
+                ),
+                const Gap(4),
+                Text(
+                  '${_totalMines.ceil()}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+                const Gap(1),
+                Transform.scale(
+                  scale: 1.3,
+                  child: AbsorbPointer(
+                    absorbing: _isGameStarted,
+                    child: Slider(
+                      thumbColor: !_isGameStarted
+                          ? const Color(0xff1FFF20)
+                          : Colors.red.shade600,
+                      min: 1,
+                      max: 24,
+                      value: _totalMines.ceilToDouble(),
+                      onChanged: (minesCount) {
+                        setState(() {
+                          _totalMines = minesCount.ceilToDouble();
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                const Gap(2),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    fixedSize: const Size(150, 50),
+                    backgroundColor: _isGameStarted
+                        ? Colors.red.shade600
+                        : const Color(0xff1FFF20),
+                  ),
+                  onPressed: () {
+                    if (!_isGameStarted) {
+                      generateMineIndexes();
+                    } else if (_isResetButtonClickable) {
+                      resetGame(context);
+                    }
                   },
+                  child: Text(
+                    !_isGameStarted ? 'START' : 'RESET',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: !_isGameStarted ? Colors.black : Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            const Gap(1),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                fixedSize: const Size(150, 50),
-                backgroundColor: _isGameStarted
-                    ? Colors.red.shade600
-                    : const Color(0xff1FFF20),
-              ),
-              onPressed: () {
-                if (!_isGameStarted) {
-                  generateMineIndexes();
-                } else {
-                  resetGame(context);
-                }
-              },
-              child: Text(
-                !_isGameStarted ? 'START' : 'RESET',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: !_isGameStarted ? Colors.black : Colors.white,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
@@ -252,6 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       } else if (_isTileClickable) {
                         if (_tiles[index] == 0) {
+                          SoundEffects.play(Constants.popEffect);
                           _tiles[index] = 1;
                           BlocProvider.of<ViewTileBloc>(context).add(
                             ClickTile(
@@ -277,12 +292,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'You won!',
                                   () => resetGame(context),
                                 );
+                                SoundEffects.play(Constants.winningEffect);
                               },
                             );
                           }
                         } else if (_tiles[index] == -1) {
-                          _isTileClickable = false;
+                          SoundEffects.play(Constants.fallingEffect);
                           _clickedMineIndex = index;
+                          _isTileClickable = false;
+                          _isResetButtonClickable = false;
 
                           BlocProvider.of<ViewTileBloc>(context).add(
                             ClickTile(

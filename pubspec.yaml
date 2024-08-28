@@ -7,6 +7,7 @@ environment:
   sdk: ">=3.4.4 <4.0.0"
 
 dependencies:
+  audioplayers: ^6.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
@@ -27,3 +28,4 @@ flutter:
   assets:
     - assets/animations/
     - assets/icons/
+    - assets/sounds/

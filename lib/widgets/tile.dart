@@ -13,7 +13,7 @@ class Tile extends StatelessWidget {
       width: 115,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: color ?? Colors.grey,
+        color: color ?? Colors.grey.shade700,
       ),
       child: icon == null
           ? const SizedBox()
